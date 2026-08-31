@@ -262,9 +262,9 @@
         .btn { 
             background: linear-gradient(135deg, #3498db, #2980b9);
             color: white; 
-            padding: 15px 30px; 
+            padding: 11px 30px; 
             border: none; 
-            border-radius: 25px; 
+            border-radius: 8px; 
             cursor: pointer; 
             font-size: 16px;
             font-weight: 500;
@@ -624,14 +624,14 @@
                     <div class="search-row" style="margin-bottom:12px; grid-template-columns: 1fr;">
                         <select id="branchStudentSelect" class="input"></select>
                     </div>
-                    <div class="report-actions">
+                    <div class="report-actions" style="gap:10px;">
                         <button id="reportClearFilterBtn" class="btn">Filtreyi Temizle</button>
+                        <button id="printBranchStudentBtn" class="btn" style="background:#27ae60;">Sınıf Listesini Yazdır</button>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="report-actions" style="margin-bottom:10px; justify-content:space-between;">
+                    <div style="margin-bottom:10px;">
                         <h3 style="margin-top:0; margin-bottom:0; font-size:1.1em; color:#2c3e50;">Şube Öğrenci Listesi</h3>
-                        <button id="printBranchStudentBtn" class="btn" style="background:#27ae60;">Sınıf Listesini Yazdır</button>
                     </div>
                     <div id="branchStudentListWrap" class="table-wrap" style="max-height:500px; overflow-y:auto;"></div>
                 </div>
@@ -850,8 +850,8 @@
             <div class="modal-header">
                 <h2>İlçe Özet Raporu</h2>
                 <div style="display:flex; gap:10px;">
-                    <button id="modalDistrictSummaryPrintBtn" class="btn" style="padding:8px 12px; font-size:0.9em;">Yazdır</button>
-                    <button id="modalDistrictSummaryExportBtn" class="btn" style="padding:8px 12px; font-size:0.9em;">Excel'e Aktar</button>
+                    <button id="modalDistrictSummaryPrintBtn" class="btn" style="padding:4px 12px; font-size:0.9em;">Yazdır</button>
+                    <button id="modalDistrictSummaryExportBtn" class="btn" style="padding:4px 12px; font-size:0.9em;">Excel'e Aktar</button>
                     <button class="modal-close">&times;</button>
                 </div>
             </div>
@@ -1674,9 +1674,9 @@
 
             if (totalPages > 1) {
                 searchPagination.innerHTML = `
-                    <button class="btn" style="padding:8px 14px;" ${searchPage===1?'disabled':''} onclick="window.__searchPrev&&window.__searchPrev()">Önceki</button>
+                    <button class="btn" style="padding:4px 14px;" ${searchPage===1?'disabled':''} onclick="window.__searchPrev&&window.__searchPrev()">Önceki</button>
                     <span style="align-self:center; font-weight:600; color:#2c3e50;">${searchPage}/${totalPages}</span>
-                    <button class="btn" style="padding:8px 14px;" ${searchPage===totalPages?'disabled':''} onclick="window.__searchNext&&window.__searchNext()">Sonraki</button>
+                    <button class="btn" style="padding:4px 14px;" ${searchPage===totalPages?'disabled':''} onclick="window.__searchNext&&window.__searchNext()">Sonraki</button>
                 `;
             } else {
                 searchPagination.innerHTML = '';
@@ -2055,9 +2055,9 @@
             if (reportPagination) {
                 if (totalPages > 1) {
                     reportPagination.innerHTML = `
-                        <button class="btn" style="padding:8px 14px;" ${reportPage===1?'disabled':''} onclick="window.__reportPrev&&window.__reportPrev()">Önceki</button>
+                        <button class="btn" style="padding:4px 14px;" ${reportPage===1?'disabled':''} onclick="window.__reportPrev&&window.__reportPrev()">Önceki</button>
                         <span style="align-self:center; font-weight:600; color:#2c3e50;">${reportPage}/${totalPages}</span>
-                        <button class="btn" style="padding:8px 14px;" ${reportPage===totalPages?'disabled':''} onclick="window.__reportNext&&window.__reportNext()">Sonraki</button>
+                        <button class="btn" style="padding:4px 14px;" ${reportPage===totalPages?'disabled':''} onclick="window.__reportNext&&window.__reportNext()">Sonraki</button>
                     `;
                 } else {
                     reportPagination.innerHTML = '';
@@ -2320,9 +2320,9 @@
             if (districtReportPagination) {
                 if (totalPages > 1) {
                     districtReportPagination.innerHTML = `
-                        <button class="btn" style="padding:8px 14px;" ${districtReportPage===1?'disabled':''} onclick="window.__districtReportPrev&&window.__districtReportPrev()">Önceki</button>
+                        <button class="btn" style="padding:4px 14px;" ${districtReportPage===1?'disabled':''} onclick="window.__districtReportPrev&&window.__districtReportPrev()">Önceki</button>
                         <span style="align-self:center; font-weight:600; color:#2c3e50;">${districtReportPage}/${totalPages}</span>
-                        <button class="btn" style="padding:8px 14px;" ${districtReportPage===totalPages?'disabled':''} onclick="window.__districtReportNext&&window.__districtReportNext()">Sonraki</button>
+                        <button class="btn" style="padding:4px 14px;" ${districtReportPage===totalPages?'disabled':''} onclick="window.__districtReportNext&&window.__districtReportNext()">Sonraki</button>
                     `;
                 } else {
                     districtReportPagination.innerHTML = '';
