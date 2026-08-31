@@ -8,6 +8,7 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 /Users/cem/Desktop/excel/
 ├── index.html          # Ana uygulama (tek dosya: HTML + CSS + JS)
 ├── favicon.png         # Tarayıcı sekme ikonu
+├── AGENTS.md           # Bu dosya
 └── README.md           # Proje açıklaması
 ```
 
@@ -15,9 +16,9 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 
 ### Dosya Düzenleme
 - Tüm uygulama tek bir `index.html` dosyasında bulunur
-- CSS: `<style>` bloğu içinde (satır ~13-460)
-- HTML: `<body>` içinde (satır ~464-870)
-- JavaScript: `<script>` bloğu içinde (satır ~873-son)
+- CSS: `<style>` bloğu içinde
+- HTML: `<body>` içinde
+- JavaScript: `<script>` bloğu içinde
 - Yeni özellik eklerken mevcut kod stilini ve yapıyı koru
 
 ### Kod Stili
@@ -37,12 +38,31 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 
 ### Filtreleme Mantığı
 - `shouldExcludeBySchoolOrBranch(schoolName, branchName)` → true/false döner
-- Dışlanma koşulları:
-  - Okul adı "kademe" içeriyor mu → tüm satırlar dışlanır
-  - Şube adı "otistik" içeriyor mu → dışlanır
-  - Şube adı "zihinsel" içeriyor mu → dışlanır
+- **Okul hariç tutma** (normalize edilmiş):
+  - `"kademe"` → tüm satırlar dışlanır
+  - `"engelli"` → tüm satırlar dışlanır
+  - `"engelliler"` → tüm satırlar dışlanır
+  - `"ozel egitim uygulama"` → tüm satırlar dışlanır
+- **Şube hariç tutma** (normalize edilmiş):
+  - `"hafif"` → dışlanır
+  - `"zihinsel"` → dışlanır
+  - `"engelli"` → dışlanır
+  - `"engelliler"` → dışlanır
+  - `"isitme"` → dışlanır
+  - `"otistik"` → dışlanır
 - `getExclusionReason()` → dışlanma nedenini string olarak döner
 - Normalize: Türkçe karakterler ASCII'ye dönüştürülür (İ→i, ğ→g, ü→u, ş→s, ı→i, ö→o, ç→c)
+- web-system-core projesiyle aynı filtre kelimeleri kullanılır
+
+### Etiket Sistemi
+- `buildLabelSheetHtml(items, cols, rows, colorObj)` → A4 sayfa HTML'i üretir
+- `LABEL_COLORS` dizisi: 10 renk kutucuğu, her biri tam renk seti içerir (`{primary, border, bg, text, muted}`)
+- Renk seçimi: kutucuğa tıklama ile yapılır, tıklanınca otomatik `previewLabels()` çağrılır
+- Varsayılan satır sayısı: 8
+- Varsayılan sütun sayısı: 3
+- Sol sidebar: district adı dikey yazılı, renkli arka plan
+- İçerik: ders adı (varsa), okul kodu + adı, istatistik kutuları (Şube Sayısı / Öğrenci Sayısı)
+- Dinamik font: hücre boyutuna göre otomatik ölçekleme
 
 ### Sütun Eşleştirme
 - `detectColumns(headers)` → ilçe, okul, kurum kodu, şube sütunlarını bulur
@@ -60,6 +80,10 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 - `window.DataService.saveToIndexedDB()`: IndexedDB'ye kaydetme
 - `window.SqlDB`: sql.js tabanlı SQL veritabanı
 
+### Sidebar
+- `.twitter-card` kutusu: `opacity: 0.2`, `text-align: center`
+- `.nav-item` font boyutu: `13px`
+
 ## Değişiklik Yaparken Dikkat
 
 1. **XSS koruması**: Kullanıcıdan gelen verileri HTML'e dökerken her zaman `escapeHtml()` kullan
@@ -68,6 +92,7 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 4. **Print**: `@media print` kuralları var, yazdırma stilini bozma
 5. **Event delegation**: Tablo satırları için event delegation kullan (dynmaik HTML)
 6. **Global değişken**: Yeni global değişken eklerken `let/const` ile tanımla, `window.` prefix kullanma
+7. **Etiket renkleri**: Yeni renk eklerken `LABEL_COLORS` dizisine `{name, value, border, colors}` objesi ekle
 
 ## Yaygın Hatalar
 
@@ -75,3 +100,4 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 - Sütun indexlerini karıştırmak → yanlış veri gösterimi
 - `normalizeHeaderText()` kullanmadan büyük/küçük harf karşılaştırması → eşleşmeme
 - `classList` yerine `style.display` kullanmak → CSS uyumsuzluğu
+- Etiket fonksiyonlarına `colorScheme` stringi yerine `colorObj` göndermek → renk çalışmaz
