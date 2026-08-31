@@ -2771,109 +2771,134 @@
             return items;
         }
 
-        function buildLabelSheetHtml(items, cols, rows, bgColor, borderColor) {
+        function buildLabelSheetHtml(items, cols, rows, colorScheme) {
             const perPage = cols * rows;
-            const labels = items;
+            if (!items.length) return '<p style="color:#e74c3c; padding:20px; font-family:sans-serif;">Seçimle eşleşen etiket bulunamadı.</p>';
 
-            if (!labels.length) return '<p style="color:#e74c3c; padding:20px; font-family:sans-serif;">Seçimle eşleşen etiket bulunamadı.</p>';
-
-            // Sayfalara böl
             const pages = [];
-            for (let i = 0; i < labels.length; i += perPage) pages.push(labels.slice(i, i + perPage));
+            for (let i = 0; i < items.length; i += perPage) pages.push(items.slice(i, i + perPage));
 
-            // A4: 210mm genişlik, 297mm yükseklik
-            // Üst+alt kenar 8mm → kullanılabilir yükseklik: 297 - 16 = 281mm
-            const cellH = 281 / rows;          // mm
-            const cellW = 210 / cols;          // mm
-            // Dinamik font: hücrenin kısa kenarına oranla ölçekle (1pt = 0.353mm)
-            const minDim = Math.min(cellH, cellW);
-            const ptPerMm = 2.8346;
-            const fTitle = Math.max(6,  Math.min(18, minDim * ptPerMm * 0.12)).toFixed(1);
-            const fSub   = Math.max(5,  Math.min(14, minDim * ptPerMm * 0.09)).toFixed(1);
-            const fSmall = Math.max(4,  Math.min(11, minDim * ptPerMm * 0.075)).toFixed(1);
+            const A4_W = 210, A4_H = 297;
+            const M_TOP = 8, M_BOT = 8, M_LEFT = 1, M_RIGHT = 1;
+            const GAP = 2;
+            const usableH = A4_H - M_TOP - M_BOT - Math.max(0, rows - 1) * GAP;
+            const usableW = A4_W - M_LEFT - M_RIGHT - Math.max(0, cols - 1) * GAP;
+            const cellH = usableH / rows;
+            const cellW = usableW / cols;
 
-            const cellStyle = [
-                `background:${bgColor}`,
-                `border:1px solid ${borderColor}`,
-                `border-radius:0`,
-                `padding:1mm`,
-                `box-sizing:border-box`,
-                `width:${cellW.toFixed(4)}mm`,
-                `height:${cellH.toFixed(4)}mm`,
-                `overflow:hidden`,
-                `display:flex`,
-                `flex-direction:column`,
-                `justify-content:center`,
-                `align-items:center`,
-                `text-align:center`,
-                `gap:0`
-            ].join(';');
+            const baseFont = Math.max(1.5, Math.min(cellH, cellW) * 0.11);
+            const smallFont = Math.max(1.0, baseFont * 0.6);
+            const sideFont = Math.max(2.2, smallFont);
+            const branchFont = Math.max(1.0, baseFont - 0.7);
+            const schoolNameFont = Math.max(1.5, baseFont * 0.6);
+            const pad = Math.max(0.6, Math.min(cellH, cellW) * 0.04);
+            const sideW = 6;
+            const contentPad = sideW + 1;
 
-            const gridStyle = [
-                `display:grid`,
-                `grid-template-columns:repeat(${cols},1fr)`,
-                `gap:0`,
-                `padding:8mm 0`,
-                `width:210mm`,
-                `margin:0 auto`,
-                `box-sizing:border-box`
-            ].join(';');
+            const sm = {
+                blue:   { primary:'#bfdbfe', border:'#93c5fd', bg:'#eff6ff', text:'#1e3a8a', muted:'#475569' },
+                orange: { primary:'#fed7aa', border:'#fdba74', bg:'#fff7ed', text:'#7c2d12', muted:'#475569' },
+                green:  { primary:'#bbf7d0', border:'#86efac', bg:'#f0fdf4', text:'#14532d', muted:'#475569' },
+                black:  { primary:'#d1d5db', border:'#9ca3af', bg:'#f9fafb', text:'#111827', muted:'#6b7280' },
+                yellow: { primary:'#fef08a', border:'#fde047', bg:'#fefce8', text:'#713f12', muted:'#475569' },
+                none:   { primary:'#ffffff', border:'#d1d5db', bg:'#ffffff', text:'#111827', muted:'#6b7280' }
+            };
+            const s = sm[colorScheme] || sm.blue;
+            const labelTextColor = colorScheme === 'black' ? '#ffffff' : '#111827';
+            const lessonName = (document.getElementById('labelLessonInput')?.value || '').trim();
 
-            const buildCell = (label) => {
-                if (label.type === 'school') {
-                    return `<div style="${cellStyle}">
-                        <div style="font-weight:700;font-size:${fTitle}pt;color:#1a202c;line-height:1.25;word-break:break-word;">${escapeHtml(label.schoolName)}</div>
-                        <div style="font-size:${fSub}pt;color:#444;margin-top:0.15em;">${escapeHtml(label.district)}${label.schoolCode && label.schoolCode !== '-' ? ` · ${escapeHtml(label.schoolCode)}` : ''}</div>
-                        <div style="font-size:${fSmall}pt;color:#777;margin-top:0.15em;">Öğrenci: ${escapeHtml(String(label.studentCount))} · Şube: ${escapeHtml(String(label.branchCount))}</div>
-                    </div>`;
+            const buildOneLabel = (item) => {
+                const isSchool = item.type === 'school';
+                const schoolCodeText = (item.schoolCode || '').trim();
+                const schoolLabel = schoolCodeText ? `${schoolCodeText} - ${item.schoolName}` : item.schoolName;
+
+                let statsHtml = '';
+                if (isSchool) {
+                    statsHtml = `
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:${pad}mm; margin-top:${pad}mm;">
+                            <div style="background:#ffffff; border:1px solid #d1d5db; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
+                                <p style="margin:0; font-size:${smallFont}mm; text-transform:uppercase; color:${s.muted};">Şube Sayısı</p>
+                                <p style="margin:0; font-size:${baseFont}mm; font-weight:700; color:#111827;">${item.branchCount || 0}</p>
+                            </div>
+                            <div style="background:#ffffff; border:1px solid #d1d5db; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
+                                <p style="margin:0; font-size:${smallFont}mm; text-transform:uppercase; color:${s.muted};">Öğrenci Sayısı</p>
+                                <p style="margin:0; font-size:${baseFont}mm; font-weight:700; color:#111827;">${item.studentCount || 0}</p>
+                            </div>
+                        </div>`;
                 } else {
-                    return `<div style="${cellStyle}">
-                        <div style="font-weight:700;font-size:${fTitle}pt;color:#2563eb;line-height:1.25;">${escapeHtml(label.branchName)}</div>
-                        <div style="font-size:${fSub}pt;font-weight:600;color:#1a202c;margin-top:0.15em;word-break:break-word;">${escapeHtml(label.schoolName)}</div>
-                        <div style="font-size:${fSmall}pt;color:#444;margin-top:0.15em;">${escapeHtml(label.district)}${label.schoolCode && label.schoolCode !== '-' ? ` · ${escapeHtml(label.schoolCode)}` : ''}</div>
-                        <div style="font-size:${fSmall}pt;color:#777;margin-top:0.1em;">Öğrenci: ${escapeHtml(String(label.studentCount))}</div>
-                    </div>`;
+                    statsHtml = `
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:${pad}mm; margin-top:${pad}mm;">
+                            <div style="background:#ffffff; border:1px solid #d1d5db; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
+                                <p style="margin:0; font-size:${smallFont}mm; text-transform:uppercase; color:${s.muted};">Şube Adı</p>
+                                <p style="margin:0; font-size:${branchFont}mm; font-weight:700; color:#111827;">${escapeHtml(item.branchName || '')}</p>
+                            </div>
+                            <div style="background:#ffffff; border:1px solid #d1d5db; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
+                                <p style="margin:0; font-size:${smallFont}mm; text-transform:uppercase; color:${s.muted};">Öğrenci Sayısı</p>
+                                <p style="margin:0; font-size:${baseFont}mm; font-weight:700; color:#111827;">${item.studentCount || 0}</p>
+                            </div>
+                        </div>`;
                 }
+
+                return `
+                <div style="
+                    min-height:${cellH}mm; min-width:${cellW}mm;
+                    padding:${Math.max(0.5, pad)}mm;
+                    border:2px solid ${s.border}; border-radius:3mm;
+                    background:${s.bg}; position:relative;
+                    display:flex; flex-direction:column; justify-content:space-between;
+                    overflow:hidden; box-sizing:border-box;
+                ">
+                    <div style="position:absolute; left:0; top:0; bottom:0; width:${sideW}mm; border-right:1px solid #d1d5db; display:flex; align-items:center; justify-content:center; background:${s.primary};">
+                        <span style="writing-mode:vertical-rl; transform:rotate(180deg); text-transform:uppercase; font-weight:700; font-size:${sideFont}mm; color:${s.text}; line-height:1; letter-spacing:0.2mm;">${escapeHtml(item.district || '')}</span>
+                    </div>
+                    <div style="padding-left:${contentPad}mm; height:100%; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between;">
+                        <div style="text-align:center; margin-top:${pad}mm; display:flex; flex-direction:column; align-items:center; gap:${Math.max(0.5, pad / 2)}mm;">
+                            ${lessonName ? `<h3 style="margin:0; font-size:${smallFont}mm; font-weight:700; text-transform:uppercase; color:${labelTextColor};">${escapeHtml(lessonName)}</h3>` : ''}
+                            <h2 style="margin:0; font-size:${schoolNameFont}mm; line-height:${Math.max(1, schoolNameFont * 1.05)}mm; font-weight:900; padding:${Math.max(0.5, pad)}mm; background:#ffffff; color:#111827; border:1px solid #d1d5db; border-radius:2mm; width:100%; box-sizing:border-box; overflow:hidden;">${escapeHtml(schoolLabel)}</h2>
+                        </div>
+                        ${statsHtml}
+                    </div>
+                </div>`;
             };
 
-            const emptyCell = `<div style="${cellStyle};opacity:0;pointer-events:none;"></div>`;
+            const sections = pages.map(page => {
+                const labelsHtml = page.map(buildOneLabel).join('');
+                return `
+                <div style="width:210mm; height:297mm; background:#ffffff; padding-top:${M_TOP}mm; padding-bottom:${M_BOT}mm; padding-left:${M_LEFT}mm; padding-right:${M_RIGHT}mm; box-sizing:border-box; overflow:hidden;">
+                    <div style="display:grid; grid-template-rows:repeat(${rows}, ${cellH}mm); grid-template-columns:repeat(${cols}, ${cellW}mm); gap:${GAP}mm; width:100%; height:100%;">
+                        ${labelsHtml}
+                    </div>
+                </div>`;
+            });
 
-            return pages.map((page, pageIdx) => {
-                let cells = page.map(buildCell).join('');
-                // Son sayfada boş hücre doldur
-                for (let i = page.length; i < perPage; i++) cells += emptyCell;
-                const pb = pageIdx < pages.length - 1 ? 'page-break-after:always;' : '';
-                return `<div style="${gridStyle};${pb}">${cells}</div>`;
-            }).join('');
+            return sections.join('');
         }
 
         function previewLabels() {
             const items = getLabelItems();
+            const area = document.getElementById('labelPreviewArea');
             if (!items.length) {
-                document.getElementById('labelPreviewArea').innerHTML = '<div class="label-preview-empty" style="color:#e74c3c;">Veri bulunamadı. Lütfen önce Excel dosyası yükleyin.</div>';
+                area.innerHTML = '<div class="label-preview-empty" style="color:#e74c3c;">Veri bulunamadı. Lütfen önce Excel dosyası yükleyin.</div>';
                 return;
             }
-            const cols  = parseInt(document.getElementById('labelColCount')?.value  || '3');
-            const rows  = parseInt(document.getElementById('labelRowCount')?.value  || '5');
-            const color = labelSelectedColor || LABEL_COLORS[0];
-            const html  = buildLabelSheetHtml(items, cols, rows, color.value, color.border);
-            const area  = document.getElementById('labelPreviewArea');
-            if (area) {
-                area.innerHTML = `<div style="transform:scale(0.48);transform-origin:top left;width:209%;min-height:200px;">${html}</div>`;
-            }
+            const cols = parseInt(document.getElementById('labelColCount')?.value || '3');
+            const rows = parseInt(document.getElementById('labelRowCount')?.value || '5');
+            const scheme = document.querySelector('input[name="labelColorScheme"]:checked')?.value || 'blue';
+            const html = buildLabelSheetHtml(items, cols, rows, scheme);
+            area.innerHTML = `<div style="transform:scale(0.48); transform-origin:top left; width:209%; min-height:200px;">${html}</div>`;
         }
 
         function printLabels() {
             const items = getLabelItems();
-            if (!items.length) { alert('Yazdırılacak etiket yok. Lütfen önce Excel dosyası yükleyin.'); return; }
-            const cols  = parseInt(document.getElementById('labelColCount')?.value  || '3');
-            const rows  = parseInt(document.getElementById('labelRowCount')?.value  || '5');
-            const color = labelSelectedColor || LABEL_COLORS[0];
-            const content = buildLabelSheetHtml(items, cols, rows, color.value, color.border);
+            if (!items.length) { alert('Yazdırılacak etiket yok.'); return; }
+            const cols = parseInt(document.getElementById('labelColCount')?.value || '3');
+            const rows = parseInt(document.getElementById('labelRowCount')?.value || '5');
+            const scheme = document.querySelector('input[name="labelColorScheme"]:checked')?.value || 'blue';
+            const content = buildLabelSheetHtml(items, cols, rows, scheme);
             if (content.includes('eşleşen etiket bulunamadı')) { alert('Seçimle eşleşen etiket bulunamadı.'); return; }
             const win = window.open('', '_blank');
-            if (!win) { alert('Lütfen açılır pencere izni verin.'); return; }
-            win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Etiketler</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',-apple-system,sans-serif;}@page{size:A4 portrait;margin:0;}@media print{body{margin:0;}}</style></head><body>${content}</body></html>`);
+            if (!win) { alert('Pop-up engellendi.'); return; }
+            win.document.write(`<!doctype html><html lang="tr"><head><meta charset="utf-8"/><title>Etiketler</title><style>@page{size:A4;margin:0;}body{margin:0;padding:0;background:#fff;font-family:Inter,-apple-system,sans-serif;}.print-page{break-inside:avoid;page-break-inside:avoid;}.print-page:not(:last-child){break-after:page;page-break-after:always;}</style></head><body>${content}</body></html>`);
             win.document.close();
             win.focus();
             setTimeout(() => win.print(), 400);
