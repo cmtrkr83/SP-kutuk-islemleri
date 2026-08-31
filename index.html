@@ -677,15 +677,6 @@
                 <div id="districtReportPagination" class="report-actions" style="margin-bottom:10px;"></div>
                 <div id="districtSchoolTableWrap" class="table-wrap"></div>
             </div>
-            <div class="card hidden" id="districtSummaryCard">
-                <h3 style="margin-top:0; margin-bottom:15px; font-size:1.1em; color:#2c3e50;">İlçe Özet Raporu</h3>
-                <div class="report-actions">
-                    <button id="districtSummaryPrintBtn" class="btn">Yazdır</button>
-                    <button id="districtSummaryExportBtn" class="btn">Excel'e Aktar</button>
-                    <button id="districtSummaryBackBtn" class="btn">Geri Dön</button>
-                </div>
-                <div id="districtSummaryTableWrap" class="table-wrap"></div>
-            </div>
         </div>
 
         <div id="backupSection" class="section hidden">
@@ -992,11 +983,6 @@
         const districtReportPagination = document.getElementById('districtReportPagination');
         const districtSchoolTableWrap = document.getElementById('districtSchoolTableWrap');
         const districtSummaryBtn = document.getElementById('districtSummaryBtn');
-        const districtSummaryCard = document.getElementById('districtSummaryCard');
-        const districtSummaryTableWrap = document.getElementById('districtSummaryTableWrap');
-        const districtSummaryPrintBtn = document.getElementById('districtSummaryPrintBtn');
-        const districtSummaryExportBtn = document.getElementById('districtSummaryExportBtn');
-        const districtSummaryBackBtn = document.getElementById('districtSummaryBackBtn');
         const districtSummaryModal = document.getElementById('districtSummaryModal');
         const modalDistrictSummaryTableWrap = document.getElementById('modalDistrictSummaryTableWrap');
         const modalDistrictSummaryPrintBtn = document.getElementById('modalDistrictSummaryPrintBtn');
@@ -1030,10 +1016,6 @@
             filterToggleStatus.textContent = exclusionFilterEnabled
                 ? 'Filtre açık: KADEME, otistik ve zihinsel engelli sınıfları dışlanır.'
                 : 'Filtre kapalı: tüm kayıtlar dahil edilir.';
-            const excludedSection = document.getElementById('excludedSection');
-            if (!exclusionFilterEnabled && excludedSection) {
-                excludedSection.classList.add('hidden');
-            }
         }
 
         async function reprocessWithCurrentFilter() {
@@ -1399,17 +1381,12 @@
                         // privateStudentCount burada değil, aşağıda hesaplanacak
                     }
                     
-                    // Engelli öğrenci kontrolü (okul adı + şube adı)
-                    if (isSpecialEducationStudent(schoolName, branchName)) {
+                    // Excel yüklendiğinde de filtreleme ile aynı mantık kullanılsın (AGENTS: shouldExclude)
+                    if (shouldExcludeBySchoolOrBranch(schoolName, branchName)) {
                         specialStudentCount++;
                         specialSchools.add(schoolName);
                         if (currentDistrict) districtSpecialData[currentDistrict]++;
-                    } else if (isSpecialEducationSchool) {
-                        // Özel eğitim okulundaki normal öğrenciler de özel eğitim öğrencisi sayılır
-                        specialStudentCount++;
-                        specialSchools.add(schoolName);
-                        if (currentDistrict) districtSpecialData[currentDistrict]++;
-                    } else if (isPrivateSchool && !isSpecialEducationSchool) {
+                    } else if (isPrivateSchool) {
                         // Paralı okuldaki öğrenciler
                         privateStudentCount++;
                         // Paralı okullardaki şube bilgisi
@@ -1602,20 +1579,6 @@
                     }
                 }
             });
-        }
-
-        function generateColors(count) {
-            const colors = [
-                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
-                '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF',
-                '#4BC0C0', '#FF6384', '#36A2EB', '#FFCE56'
-            ];
-            
-            const result = [];
-            for (let i = 0; i < count; i++) {
-                result.push(colors[i % colors.length]);
-            }
-            return result;
         }
 
         function showProgress() {
@@ -1905,8 +1868,8 @@
                 const summary = map.get(key);
                 if (!summary.district && districtName) summary.district = districtName;
                 summary.studentCount += 1;
-                if (isSpecialEducationStudent(schoolName, branchName) || isSpecialSchool) summary.specialCount += 1;
-                if (isPrivateSchool && !isSpecialSchool) summary.privateCount += 1;
+                if (shouldExcludeBySchoolOrBranch(schoolName, branchName)) summary.specialCount += 1;
+                if (isPrivateSchool && !shouldExcludeBySchoolOrBranch(schoolName, branchName)) summary.privateCount += 1;
                 if (branchName) {
                     const current = summary.branches.get(branchName) || { count: 0 };
                     current.count += 1;
@@ -2392,21 +2355,6 @@
             return Array.from(summaryMap.values()).sort((a, b) => a.district.localeCompare(b.district));
         }
 
-        function renderDistrictSummaryTable() {
-            const summaryData = buildDistrictSummary();
-            if (!summaryData.length) {
-                districtSummaryTableWrap.innerHTML = '<div class="no-data">Özet verisi bulunamadı.</div>';
-                return;
-            }
-
-            let html = '<table class="table"><thead><tr><th>#</th><th>İlçe</th><th>Okul Sayısı</th><th>Şube Sayısı</th><th>Öğrenci Sayısı</th><th>Özel Eğitim Öğrenci</th></tr></thead><tbody>';
-            summaryData.forEach((s, i) => {
-                html += `<tr><td>${i + 1}</td><td>${escapeHtml(s.district)}</td><td>${escapeHtml(s.schoolCount)}</td><td>${escapeHtml(s.branchCount)}</td><td>${escapeHtml(s.studentCount)}</td><td>${escapeHtml(s.specialCount)}</td></tr>`;
-            });
-            html += '</tbody></table>';
-            districtSummaryTableWrap.innerHTML = html;
-        }
-
         function showDistrictSummaryModal() {
             const summaryData = buildDistrictSummary();
             if (!summaryData.length) {
@@ -2809,8 +2757,6 @@
             const contentPad = sideW + 1;
 
             const s = colorObj || LABEL_COLORS[0].colors;
-            const labelTextColor = s.text || '#111827';
-            const lessonName = (document.getElementById('labelLessonInput')?.value || '').trim();
 
             const buildOneLabel = (item) => {
                 const isSchool = item.type === 'school';
@@ -2858,7 +2804,6 @@
                     </div>
                     <div style="padding-left:${contentPad}mm; height:100%; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between;">
                         <div style="text-align:center; margin-top:${pad}mm; display:flex; flex-direction:column; align-items:center; gap:${Math.max(0.5, pad / 2)}mm;">
-                            ${lessonName ? `<h3 style="margin:0; font-size:${smallFont}mm; font-weight:700; text-transform:uppercase; color:${labelTextColor};">${escapeHtml(lessonName)}</h3>` : ''}
                             <h2 style="margin:0; font-size:${schoolNameFont}mm; line-height:${Math.max(1, schoolNameFont * 1.05)}mm; font-weight:900; padding:${Math.max(0.5, pad)}mm; background:#ffffff; color:#111827; border:1px solid ${s.border}; border-radius:2mm; width:100%; box-sizing:border-box; overflow:hidden;">${escapeHtml(schoolLabel)}</h2>
                         </div>
                         ${statsHtml}

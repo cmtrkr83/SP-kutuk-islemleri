@@ -61,7 +61,7 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 - Varsayılan satır sayısı: 8
 - Varsayılan sütun sayısı: 3
 - Sol sidebar: district adı dikey yazılı, renkli arka plan
-- İçerik: ders adı (varsa), okul kodu + adı, istatistik kutuları (Şube Sayısı / Öğrenci Sayısı)
+- İçerik: okul kodu + adı, istatistik kutuları (Şube Sayısı / Öğrenci Sayısı)
 - Dinamik font: hücre boyutuna göre otomatik ölçekleme
 
 ### Sütun Eşleştirme
@@ -82,7 +82,7 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 
 ### Sidebar
 - `.twitter-card` kutusu: `opacity: 0.2`, `text-align: center`
-- `.nav-item` font boyutu: `13px`
+- `.nav-item` font boyutu: `15px` (kodda `index.html:52`)
 
 ## Değişiklik Yaparken Dikkat
 
@@ -90,14 +90,14 @@ Bu dosya, yapay zeka asistanlarının bu projede çalışırken uyması gereken 
 2. **Sayfalama**: Tüm tablolar 50 satır sayfalama ile gösterilir
 3. **Responsive**: `@media` kurallarına dikkat et, mobil uyumlu ol
 4. **Print**: `@media print` kuralları var, yazdırma stilini bozma
-5. **Event delegation**: Tablo satırları için event delegation kullan (dynmaik HTML)
+5. **Tablo satır etkileşimi**: Satırlar render sonrası `querySelectorAll` + `forEach` ile doğrudan bağlanır; pagination butonları için inline `onclick` kullanılır ( `index.html:1714` civarı )
 6. **Global değişken**: Yeni global değişken eklerken `let/const` ile tanımla, `window.` prefix kullanma
 7. **Etiket renkleri**: Yeni renk eklerken `LABEL_COLORS` dizisine `{name, value, border, colors}` objesi ekle
+8. **Dinamik görünürlük**: `labelDistrictRow` / `labelSchoolRow` / `labelBranchRow` / `receiptDistrictRow` gibi koşullu alanlarda `style.display` kullanılır
 
 ## Yaygın Hatalar
 
 - `escapeHtml()` kullanılmadan HTML'e veri eklemek → XSS açığı
 - Sütun indexlerini karıştırmak → yanlış veri gösterimi
 - `normalizeHeaderText()` kullanmadan büyük/küçük harf karşılaştırması → eşleşmeme
-- `classList` yerine `style.display` kullanmak → CSS uyumsuzluğu
 - Etiket fonksiyonlarına `colorScheme` stringi yerine `colorObj` göndermek → renk çalışmaz
