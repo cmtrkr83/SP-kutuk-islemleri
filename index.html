@@ -49,6 +49,7 @@
             cursor: pointer;
             transition: all 0.3s;
             border-left: 3px solid transparent;
+            font-size: 15px;
         }
         .sidebar .nav-item:hover,
         .sidebar .nav-item.active {
@@ -773,8 +774,8 @@
                         </div>
                     </div>
 
-                    <!-- Arkaplan Rengi -->
-                    <label class="label-settings-label">Etiket Arkaplan Rengi</label>
+                    <!-- Renk Şeması -->
+                    <label class="label-settings-label">Etiket Renk Şeması</label>
                     <div id="labelColorPalette" class="label-color-palette"></div>
                 </div>
 
@@ -2631,22 +2632,21 @@
 
         // ── Etiket Oluştur ────────────────────────────────────────────────────
         const LABEL_COLORS = [
-            { name: 'Beyaz',          value: '#ffffff', border: '#cccccc' },
-            { name: 'Açık Mavi',      value: '#dbeafe', border: '#93c5fd' },
-            { name: 'Açık Yeşil',     value: '#dcfce7', border: '#86efac' },
-            { name: 'Açık Sarı',      value: '#fef9c3', border: '#fde047' },
-            { name: 'Açık Turuncu',   value: '#ffedd5', border: '#fdba74' },
-            { name: 'Açık Pembe',     value: '#fce7f3', border: '#f9a8d4' },
-            { name: 'Açık Mor',       value: '#ede9fe', border: '#c4b5fd' },
-            { name: 'Açık Turkuaz',   value: '#ccfbf1', border: '#5eead4' },
-            { name: 'Açık Kırmızı',   value: '#fee2e2', border: '#fca5a5' },
-            { name: 'Açık Gri',       value: '#f3f4f6', border: '#d1d5db' },
+            { name: 'Beyaz',          value: '#ffffff', border: '#cccccc', colors: { primary:'#ffffff', border:'#d1d5db', bg:'#ffffff', text:'#111827', muted:'#6b7280' } },
+            { name: 'Açık Mavi',      value: '#dbeafe', border: '#93c5fd', colors: { primary:'#bfdbfe', border:'#93c5fd', bg:'#eff6ff', text:'#1e3a8a', muted:'#475569' } },
+            { name: 'Açık Yeşil',     value: '#dcfce7', border: '#86efac', colors: { primary:'#bbf7d0', border:'#86efac', bg:'#f0fdf4', text:'#14532d', muted:'#475569' } },
+            { name: 'Açık Sarı',      value: '#fef9c3', border: '#fde047', colors: { primary:'#fef08a', border:'#fde047', bg:'#fefce8', text:'#713f12', muted:'#475569' } },
+            { name: 'Açık Turuncu',   value: '#ffedd5', border: '#fdba74', colors: { primary:'#fed7aa', border:'#fdba74', bg:'#fff7ed', text:'#7c2d12', muted:'#475569' } },
+            { name: 'Açık Pembe',     value: '#fce7f3', border: '#f9a8d4', colors: { primary:'#fbcfe8', border:'#f9a8d4', bg:'#fdf2f8', text:'#831843', muted:'#475569' } },
+            { name: 'Açık Mor',       value: '#ede9fe', border: '#c4b5fd', colors: { primary:'#ddd6fe', border:'#c4b5fd', bg:'#f5f3ff', text:'#5b21b6', muted:'#475569' } },
+            { name: 'Açık Turkuaz',   value: '#ccfbf1', border: '#5eead4', colors: { primary:'#99f6e4', border:'#5eead4', bg:'#f0fdfa', text:'#134e4a', muted:'#475569' } },
+            { name: 'Açık Kırmızı',   value: '#fee2e2', border: '#fca5a5', colors: { primary:'#fecaca', border:'#fca5a5', bg:'#fef2f2', text:'#991b1b', muted:'#475569' } },
+            { name: 'Açık Gri',       value: '#f3f4f6', border: '#d1d5db', colors: { primary:'#e5e7eb', border:'#d1d5db', bg:'#f9fafb', text:'#111827', muted:'#6b7280' } },
         ];
         let labelSelectedColor = LABEL_COLORS[0];
         let labelInitialized = false;
 
         function initLabelSection() {
-            // Renk paletini her zaman sıfırla (yeni veri yüklenebilir)
             const palette = document.getElementById('labelColorPalette');
             if (palette && !palette.children.length) {
                 LABEL_COLORS.forEach((c, i) => {
@@ -2659,6 +2659,7 @@
                         labelSelectedColor = c;
                         document.querySelectorAll('.label-color-swatch').forEach(s => s.classList.remove('selected'));
                         swatch.classList.add('selected');
+                        previewLabels();
                     });
                     palette.appendChild(swatch);
                 });
@@ -2783,7 +2784,7 @@
             return items;
         }
 
-        function buildLabelSheetHtml(items, cols, rows, colorScheme) {
+        function buildLabelSheetHtml(items, cols, rows, colorObj) {
             const perPage = cols * rows;
             if (!items.length) return '<p style="color:#e74c3c; padding:20px; font-family:sans-serif;">Seçimle eşleşen etiket bulunamadı.</p>';
 
@@ -2807,16 +2808,8 @@
             const sideW = 6;
             const contentPad = sideW + 1;
 
-            const sm = {
-                blue:   { primary:'#bfdbfe', border:'#93c5fd', bg:'#eff6ff', text:'#1e3a8a', muted:'#475569' },
-                orange: { primary:'#fed7aa', border:'#fdba74', bg:'#fff7ed', text:'#7c2d12', muted:'#475569' },
-                green:  { primary:'#bbf7d0', border:'#86efac', bg:'#f0fdf4', text:'#14532d', muted:'#475569' },
-                black:  { primary:'#d1d5db', border:'#9ca3af', bg:'#f9fafb', text:'#111827', muted:'#6b7280' },
-                yellow: { primary:'#fef08a', border:'#fde047', bg:'#fefce8', text:'#713f12', muted:'#475569' },
-                none:   { primary:'#ffffff', border:'#d1d5db', bg:'#ffffff', text:'#111827', muted:'#6b7280' }
-            };
-            const s = sm[colorScheme] || sm.blue;
-            const labelTextColor = colorScheme === 'black' ? '#ffffff' : '#111827';
+            const s = colorObj || LABEL_COLORS[0].colors;
+            const labelTextColor = s.text || '#111827';
             const lessonName = (document.getElementById('labelLessonInput')?.value || '').trim();
 
             const buildOneLabel = (item) => {
@@ -2895,8 +2888,8 @@
             }
             const cols = parseInt(document.getElementById('labelColCount')?.value || '3');
             const rows = parseInt(document.getElementById('labelRowCount')?.value || '5');
-            const scheme = document.querySelector('input[name="labelColorScheme"]:checked')?.value || 'blue';
-            const html = buildLabelSheetHtml(items, cols, rows, scheme);
+            const colors = labelSelectedColor?.colors || LABEL_COLORS[0].colors;
+            const html = buildLabelSheetHtml(items, cols, rows, colors);
             area.innerHTML = `<div style="transform:scale(0.48); transform-origin:top left; width:209%; min-height:200px;">${html}</div>`;
         }
 
@@ -2905,8 +2898,8 @@
             if (!items.length) { alert('Yazdırılacak etiket yok.'); return; }
             const cols = parseInt(document.getElementById('labelColCount')?.value || '3');
             const rows = parseInt(document.getElementById('labelRowCount')?.value || '5');
-            const scheme = document.querySelector('input[name="labelColorScheme"]:checked')?.value || 'blue';
-            const content = buildLabelSheetHtml(items, cols, rows, scheme);
+            const colors = labelSelectedColor?.colors || LABEL_COLORS[0].colors;
+            const content = buildLabelSheetHtml(items, cols, rows, colors);
             if (content.includes('eşleşen etiket bulunamadı')) { alert('Seçimle eşleşen etiket bulunamadı.'); return; }
             const win = window.open('', '_blank');
             if (!win) { alert('Pop-up engellendi.'); return; }
