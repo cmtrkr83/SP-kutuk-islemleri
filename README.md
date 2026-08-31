@@ -1,40 +1,103 @@
-# Excel Kutuk Analiz Web App
+# Excel Kütük Analiz Web Uygulaması
 
-Tek dosyali (`excel-analyzer.html`) bir web uygulamasidir.
-Excel verilerini tarayip okul/ilce bazli analiz, arama, raporlama, etiket ve tutanak olusturma islemlerini tarayici uzerinden yapar.
+Tek dosyalı (`index.html`) bir web uygulamasıdır.
+Excel kütük verilerini tarayıp okul/ilçe bazlı analiz, arama, raporlama, etiket ve tutanak oluşturma işlemlerini tarayıcı üzerinde yapar.
 
-## Ozellikler
+## Özellikler
 
-- Excel yukleme ve analiz (`.xlsx`, `.xls`)
-- Ogrenci, okul, ilce istatistik kartlari
-- Ilce bazli grafikler
-- Arama ve filtreleme
-- Okul raporu ve ilce raporu
-- Sinif listesi yazdirma
-- Etiket olusturma ve A4 cikti
-- Teslim tutanagi olusturma (A4 yatay, PDF/yazdir)
-- JSON yedek indirme
+### Veri Yükleme ve Analiz
+- `.xlsx` ve `.xls` formatında Excel dosyası yükleme (sürükle-bırak veya tıkla)
+- Dosya boyutuna göre ilerleme çubuğu ile yükleme durumu
+- Büyük veri setleri için SqlDB (IndexedDB) ve JSON yedekleme
+
+### İstatistik Kartları
+- Toplam Okul Sayısı
+- Toplam Öğrenci Sayısı
+- Toplam İlçe Sayısı
+- Resmi Kurum Öğrenci Sayısı
+- Resmi Kurum Şube Sayısı
+- Özel Eğitim Öğrenci Sayısı (filtre açıkken dışlanan öğrenci sayısını kırmızı ile gösterir)
+- Özel Eğitim Kurumu Sayısı (filtre açıkken dışlanan kurum sayısını kırmızı ile gösterir)
+- Özel Okul Sayısı
+- Özel Okul Öğrenci Sayısı
+- Özel Okul Şube Sayısı
+
+### Filtreleme
+- KADEME, otistik ve zihinsel engelli sınıflarını dışlayan filtre
+- Filtre açık/kapalı anahtarı ile anında geçiş
+- Dışlanan kayıt sayısı kartlarda kırmızı ile gösterilir
+
+### Grafikler
+- Öğrenci Türü Dağılımı (halka/grafik): Normal, Engelli, Özel Kurum
+- İlçelere Göre Öğrenci Dağılımı (yığılmış çubuk grafik): Normal ve özel eğitim öğrencileri ayrıştırılmış
+
+### Arama
+- Tüm sütunlarda veya belirli sütunda arama
+- Sayfalı sonuç listesi (50'şer satır)
+- Arama sonuçlarını Excel'e aktarma
+
+### Okul Raporu
+- İlçe ve okul bazlı filtreleme
+- Okul listesi tablosu (ilçe, kurum kodu, okul adı, öğrenci sayısı, şube sayısı, özel eğitim)
+- Okul tıklama ile şube detayı görüntüleme
+- Şube bazlı sınıf listesi yazdırma (A4)
+- Tüm okulları Excel'e aktarma
+- İlçe bazlı toplu yazdırma
+
+### İlçe Raporu
+- İlçe bazlı filtreleme
+- İlçe özet raporu (okul, şube, öğrenci, özel eğitim sayıları)
+- İlçe raporu yazdırma ve Excel'e aktarma
+- İlçe özet modal penceresi
+
+### Etiket Oluştur
+- Okul etiketi veya şube etiketi oluşturma
+- Kapsam seçimi: Tüm okullar, seçili ilçe, seçili okul
+- Sayfa düzeni: Sütun × Satır sayısı ayarı
+- 10 farklı arkaplan rengi
+- A4 boyutunda önizleme ve yazdırma
+
+### Tutanak Oluştur
+- Merkez → İlçe teslim tutanağı
+- İlçe → Okul teslim tutanağı
+- Tarih, başlık, düzenleyen bilgisi girişi
+- A4 yatay formatta yazdırma
+
+### Yedekleme
+- Tüm veriyi JSON olarak indirme
 
 ## Dosyalar
 
-- `excel-analyzer.html`: Uygulamanin tum HTML/CSS/JS kodu
-- `favicon.png`: Tarayici sekme ikonu
+| Dosya | Açıklama |
+|-------|----------|
+| `index.html` | Uygulamanın tüm HTML/CSS/JS kodu (tek dosya) |
+| `favicon.png` | Tarayıcı sekme ikonu |
 
-## Kullanim
+## Kurulum
 
-1. `excel-analyzer.html` dosyasini tarayicida acin.
-2. Excel dosyanizi yukleyin.
-3. Sol menuden ilgili modulu secerek islemlerinizi yapin:
-   - Ana Sayfa
-   - Arama Yap
-   - Okul Raporu
-   - Ilce Raporu
-   - Etiket Olustur
-   - Tutanak Olustur
-   - Yedekleme
+Kurulum gerektirmez. `index.html` dosyasını tarayıcıda açmanız yeterlidir.
 
-## Notlar
+## Kullanım
 
-- Uygulama istemci tarafinda calisir; kurulum gerektirmez.
-- En iyi deneyim icin guncel bir Chrome/Edge tarayicisi onerilir.
+1. `index.html` dosyasını tarayıcıda açın
+2. Excel dosyanızı sürükleyip bırakın veya "Dosya Se" butonuyla seçin
+3. Sol menüden ilgili modülü seçerek işlemlerinizi yapın:
+   - **Ana Sayfa** — İstatistik kartları ve grafikler
+   - **Arama Yap** — Öğrenci ve veri arama
+   - **Okul Raporu** — Okul listesi, şube detayları, sınıf listesi
+   - **İlçe Raporu** — İlçe bazlı analiz ve raporlar
+   - **Etiket Oluştur** — Okul ve şube etiketleri
+   - **Tutanak Oluştur** — Teslim tutanakları
+   - **Yedekleme** — JSON yedek indirme
 
+## Teknik Detaylar
+
+- **Tek dosya mimarisi**: Tüm uygulama tek bir HTML dosyasında (HTML + CSS + JS)
+- **Kütüphaneler**: XLSX.js (Excel okuma), Chart.js (grafikler), sql.js (IndexedDB tabanlı SQL)
+- **Veri saklama**: IndexedDB + SqlDB (büyük veri için), localStorage (başlıklar için)
+- **Güvenlik**: XSS koruması için `escapeHtml()` fonksiyonu kullanımı
+- **Tarihçe**: 3.000+ satır JavaScript
+
+## Tarayıcı Desteği
+
+En iyi deneyim için Chrome, Edge veya Firefox tarayıcısı önerilir.

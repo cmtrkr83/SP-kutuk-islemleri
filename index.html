@@ -1649,12 +1649,13 @@
             const ilceCol = findCol(['ilce adi', 'ılce adı', 'ilce', 'ilçe']);
             const kurumKoduCol = findCol(['kurum kod']);
             const kurumAdiCol = findCol(['kurum ad']);
-            const ogrAdCol = findCol(['ogrenci']);
+            const ogrAdCol = findCol(['ogrenci ad', 'ogrenciad', 'ogrenci isim']);
             const ogrSoyadCol = findCol(['soyad']);
+            const ogrTamAdCol = findCol(['ad soyad', 'adisoyad', 'adı soyadı']);
             const subeCol = findCol(['sube']);
 
             console.log('Bulunan sütunlar:', {
-                opaqCol, ilceCol, kurumKoduCol, kurumAdiCol, ogrAdCol, ogrSoyadCol, subeCol
+                opaqCol, ilceCol, kurumKoduCol, kurumAdiCol, ogrAdCol, ogrSoyadCol, ogrTamAdCol, subeCol
             });
 
             add(opaqCol, 'OPAQ');
@@ -1663,6 +1664,7 @@
             add(kurumAdiCol, 'Kurum Adı');
             add(ogrAdCol, 'Öğrenci Adı');
             add(ogrSoyadCol, 'Öğrenci Soyadı');
+            add(ogrTamAdCol, 'Öğrenci Adı Soyadı');
             add(subeCol, 'Şubesi');
             
             console.log('Seçilen sütunlar:', searchDisplayCols);
