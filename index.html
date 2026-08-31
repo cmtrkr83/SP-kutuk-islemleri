@@ -2821,11 +2821,11 @@
                 if (isSchool) {
                     statsHtml = `
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:${pad}mm; margin-top:${pad}mm;">
-                            <div style="background:#ffffff; border:1px solid #d1d5db; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
+                            <div style="background:#ffffff; border:1px solid ${s.border}; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
                                 <p style="margin:0; font-size:${smallFont}mm; text-transform:uppercase; color:${s.muted};">Şube Sayısı</p>
                                 <p style="margin:0; font-size:${baseFont}mm; font-weight:700; color:#111827;">${item.branchCount || 0}</p>
                             </div>
-                            <div style="background:#ffffff; border:1px solid #d1d5db; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
+                            <div style="background:#ffffff; border:1px solid ${s.border}; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
                                 <p style="margin:0; font-size:${smallFont}mm; text-transform:uppercase; color:${s.muted};">Öğrenci Sayısı</p>
                                 <p style="margin:0; font-size:${baseFont}mm; font-weight:700; color:#111827;">${item.studentCount || 0}</p>
                             </div>
@@ -2833,11 +2833,11 @@
                 } else {
                     statsHtml = `
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:${pad}mm; margin-top:${pad}mm;">
-                            <div style="background:#ffffff; border:1px solid #d1d5db; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
+                            <div style="background:#ffffff; border:1px solid ${s.border}; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
                                 <p style="margin:0; font-size:${smallFont}mm; text-transform:uppercase; color:${s.muted};">Şube Adı</p>
                                 <p style="margin:0; font-size:${branchFont}mm; font-weight:700; color:#111827;">${escapeHtml(item.branchName || '')}</p>
                             </div>
-                            <div style="background:#ffffff; border:1px solid #d1d5db; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
+                            <div style="background:#ffffff; border:1px solid ${s.border}; border-radius:2mm; text-align:center; padding:${pad}mm; box-sizing:border-box;">
                                 <p style="margin:0; font-size:${smallFont}mm; text-transform:uppercase; color:${s.muted};">Öğrenci Sayısı</p>
                                 <p style="margin:0; font-size:${baseFont}mm; font-weight:700; color:#111827;">${item.studentCount || 0}</p>
                             </div>
@@ -2853,13 +2853,13 @@
                     display:flex; flex-direction:column; justify-content:space-between;
                     overflow:hidden; box-sizing:border-box;
                 ">
-                    <div style="position:absolute; left:0; top:0; bottom:0; width:${sideW}mm; border-right:1px solid #d1d5db; display:flex; align-items:center; justify-content:center; background:${s.primary};">
+                    <div style="position:absolute; left:0; top:0; bottom:0; width:${sideW}mm; border-right:1px solid ${s.border}; display:flex; align-items:center; justify-content:center; background:${s.primary};">
                         <span style="writing-mode:vertical-rl; transform:rotate(180deg); text-transform:uppercase; font-weight:700; font-size:${sideFont}mm; color:${s.text}; line-height:1; letter-spacing:0.2mm;">${escapeHtml(item.district || '')}</span>
                     </div>
                     <div style="padding-left:${contentPad}mm; height:100%; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between;">
                         <div style="text-align:center; margin-top:${pad}mm; display:flex; flex-direction:column; align-items:center; gap:${Math.max(0.5, pad / 2)}mm;">
                             ${lessonName ? `<h3 style="margin:0; font-size:${smallFont}mm; font-weight:700; text-transform:uppercase; color:${labelTextColor};">${escapeHtml(lessonName)}</h3>` : ''}
-                            <h2 style="margin:0; font-size:${schoolNameFont}mm; line-height:${Math.max(1, schoolNameFont * 1.05)}mm; font-weight:900; padding:${Math.max(0.5, pad)}mm; background:#ffffff; color:#111827; border:1px solid #d1d5db; border-radius:2mm; width:100%; box-sizing:border-box; overflow:hidden;">${escapeHtml(schoolLabel)}</h2>
+                            <h2 style="margin:0; font-size:${schoolNameFont}mm; line-height:${Math.max(1, schoolNameFont * 1.05)}mm; font-weight:900; padding:${Math.max(0.5, pad)}mm; background:#ffffff; color:#111827; border:1px solid ${s.border}; border-radius:2mm; width:100%; box-sizing:border-box; overflow:hidden;">${escapeHtml(schoolLabel)}</h2>
                         </div>
                         ${statsHtml}
                     </div>
