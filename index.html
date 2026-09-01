@@ -597,7 +597,7 @@
                 <div class="search-row">
                     <select id="searchColumnSelect" class="input"></select>
                     <input id="searchQueryInput" class="input" placeholder="Arama terimi (örn: okul, şube, ilçe)">
-                    <button id="searchBtn" class="btn">Ara</button>
+                    <button id="searchBtn" class="btn" style="background:#27ae60;">Ara</button>
                     <button id="searchExportBtn" class="btn">Excel'e Aktar</button>
                     <button id="searchCheckBtn" class="btn">Veriyi Kontrol Et</button>
                 </div>
@@ -638,12 +638,14 @@
             </div>
             <div class="card">
                 <h3 style="margin-top:0; margin-bottom:15px; font-size:1.1em; color:#2c3e50;">Okul Listesi</h3>
-                <div class="report-actions" style="margin-bottom:10px;">
-                    <button id="reportRefreshBtn" class="btn">Yenile</button>
-                    <button id="reportExportAllBtn" class="btn">Tüm Okulları Excel'e Aktar</button>
+                <div class="report-actions" style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                    <div style="display:flex; gap:10px; align-items:center; flex-shrink:0;">
+                        <button id="reportRefreshBtn" class="btn">Yenile</button>
+                        <button id="reportExportAllBtn" class="btn">Tüm Okulları Excel'e Aktar</button>
+                    </div>
+                    <div id="reportStatus" class="file-info" style="flex:1; text-align:center; margin:0 10px; white-space:nowrap;"></div>
+                    <div id="reportPagination" class="report-actions" style="margin-bottom:0; display:flex; gap:8px; align-items:center; justify-content:flex-end; flex-shrink:0;"></div>
                 </div>
-                <div id="reportStatus" class="file-info" style="margin-bottom:10px;"></div>
-                <div id="reportPagination" class="report-actions" style="margin-bottom:10px;"></div>
                 <div id="schoolTableWrap" class="table-wrap"></div>
             </div>
             <div id="branchDetails" class="card hidden">
@@ -663,12 +665,12 @@
             </div>
             <div class="card">
                 <h3 style="margin-top:0; margin-bottom:15px; font-size:1.1em; color:#2c3e50;">Filtreler</h3>
-                <div style="display:grid; grid-template-columns: 1fr auto auto auto; gap:10px; align-items:end;">
-                    <select id="districtFilterDropdown" class="input"></select>
-                    <button id="districtReportRefreshBtn" class="btn">Yenile</button>
-                    <button id="districtReportPrintBtn" class="btn">Yazdır</button>
-                    <button id="districtReportExportBtn" class="btn">Tüm Okulları Excel'e Aktar</button>
-                    <button id="districtSummaryBtn" class="btn" style="background:#27ae60;">İl Özet</button>
+                <div style="display:grid; grid-template-columns: 40fr 15fr 10fr 10fr 25fr; gap:10px; align-items:end;">
+                    <select id="districtFilterDropdown" class="input" style="width:100%; min-width:0;"></select>
+                    <button id="districtSummaryBtn" class="btn" style="background:#27ae60; width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">İl Özet</button>
+                    <button id="districtReportRefreshBtn" class="btn" style="width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">Yenile</button>
+                    <button id="districtReportPrintBtn" class="btn" style="width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">Yazdır</button>
+                    <button id="districtReportExportBtn" class="btn" style="width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">Tüm Okulları Excel'e Aktar</button>
                 </div>
             </div>
             <div class="card">
@@ -900,14 +902,14 @@
             const branchNorm = normalizeHeaderText(branchName || '');
 
             if (schoolNorm.includes('kademe')) return true;
-            if (schoolNorm.includes('engelli')) return true;
             if (schoolNorm.includes('engelliler')) return true;
+            if (schoolNorm.includes('engelli')) return true;
             if (schoolNorm.includes('ozel egitim uygulama')) return true;
 
             if (branchNorm.includes('hafif')) return true;
             if (branchNorm.includes('zihinsel')) return true;
-            if (branchNorm.includes('engelli')) return true;
             if (branchNorm.includes('engelliler')) return true;
+            if (branchNorm.includes('engelli')) return true;
             if (branchNorm.includes('isitme')) return true;
             if (branchNorm.includes('otistik')) return true;
 
@@ -919,13 +921,13 @@
             const branchNorm = normalizeHeaderText(branchName || '');
 
             if (schoolNorm.includes('kademe')) return 'Okul adında "kademe" ifadesi geçiyor';
-            if (schoolNorm.includes('engelli')) return 'Okul adında "engelli" ifadesi geçiyor';
             if (schoolNorm.includes('engelliler')) return 'Okul adında "engelliler" ifadesi geçiyor';
+            if (schoolNorm.includes('engelli')) return 'Okul adında "engelli" ifadesi geçiyor';
             if (schoolNorm.includes('ozel egitim uygulama')) return 'Okul adında "özel eğitim uygulama" ifadesi geçiyor';
             if (branchNorm.includes('hafif')) return 'Şube adında "hafif" ifadesi geçiyor';
             if (branchNorm.includes('zihinsel')) return 'Şube adında "zihinsel" ifadesi geçiyor';
-            if (branchNorm.includes('engelli')) return 'Şube adında "engelli" ifadesi geçiyor';
             if (branchNorm.includes('engelliler')) return 'Şube adında "engelliler" ifadesi geçiyor';
+            if (branchNorm.includes('engelli')) return 'Şube adında "engelli" ifadesi geçiyor';
             if (branchNorm.includes('isitme')) return 'Şube adında "işitme" ifadesi geçiyor';
             if (branchNorm.includes('otistik')) return 'Şube adında "otistik" ifadesi geçiyor';
 
