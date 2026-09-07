@@ -14,8 +14,17 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: linear-gradient(135deg, #fad0c4 0%, #a18cd1 60%, #79c7ff 100%);
+            background: linear-gradient(135deg, #0a2547 0%, #1e3f8f 55%, #79c7ff 100%);
+            background-size: 220% 220%;
+            animation: bg-drift 10s ease-in-out infinite alternate;
             min-height: 100vh;
+        }
+        @keyframes bg-drift {
+            from { background-position: 0% 0%; }
+            to { background-position: 100% 100%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body { animation: none; }
         }
         .section { display: none; }
         .section.active { display: block; }
@@ -298,7 +307,7 @@
             position: absolute;
             inset: -3px;
             border-radius: 11px;
-            padding: 5px;
+            padding: 3px;
             background: conic-gradient(from var(--beam-angle, 0deg),
                 transparent 0deg, transparent 270deg,
                 #ffd900 305deg, #ffd900 325deg, transparent 340deg);
@@ -1680,7 +1689,7 @@
                     labels: ['Normal Öğrenci', 'Engelli Öğrenci', 'Özel Kurum Öğrencisi'],
                     datasets: [{
                         data: [normalStudentCount, specialStudentCount, privateStudentCount],
-                        backgroundColor: ['#9b59b6', '#e67e22', '#d35400'],
+                        backgroundColor: ['#1e5aa8', '#e67e22', '#d35400'],
                         borderWidth: 2,
                         borderColor: '#fff'
                     }]
@@ -1715,8 +1724,8 @@
                         {
                             label: 'Normal Öğrenci',
                             data: normalData,
-                            backgroundColor: 'rgba(155, 89, 182, 0.7)',
-                            borderColor: 'rgba(155, 89, 182, 1)',
+                            backgroundColor: 'rgba(30, 90, 168, 0.7)',
+                            borderColor: 'rgba(30, 90, 168, 1)',
                             borderWidth: 1
                         },
                         {
