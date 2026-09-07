@@ -50,6 +50,14 @@
             transition: all 0.3s;
             border-left: 3px solid transparent;
             font-size: 15px;
+            background: none;
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            display: block;
         }
         .sidebar .nav-item:hover,
         .sidebar .nav-item.active {
@@ -100,7 +108,7 @@
             font-weight: 600;
         }
         .header .breadcrumb {
-            color: #7f8c8d;
+            color: #566573;
             margin-top: 5px;
         }
         .upload-section {
@@ -158,7 +166,7 @@
             transform: translateY(-5px);
         }
         .stat-card h3 { 
-            color: #7f8c8d; 
+            color: #566573; 
             margin-bottom: 15px; 
             font-size: 0.9em;
             text-transform: uppercase;
@@ -181,7 +189,7 @@
         }
         .stat-card .change {
             font-size: 0.85em;
-            color: #27ae60;
+            color: #1e8449;
             font-weight: 500;
         }
         .chart-section { 
@@ -254,13 +262,13 @@
         }
         .report-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
         @media (max-width: 1200px) { .report-container { grid-template-columns: 1fr; } }
-        .file-info a { color: #3498db; text-decoration: underline; }
+        .file-info a { color: #1a6fae; text-decoration: underline; }
         @media (max-width: 900px) {
             .search-row { grid-template-columns: 1fr; }
         }
         input[type="file"] { display: none; }
         .btn { 
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #2471a3, #1f618d);
             color: white; 
             padding: 11px 30px; 
             border: none; 
@@ -277,7 +285,7 @@
         }
         .file-info { 
             margin-top: 20px; 
-            color: #7f8c8d;
+            color: #566573;
             font-weight: 500;
         }
         .progress-container { 
@@ -346,7 +354,7 @@
             border-radius: 50%;
         }
         .switch input:checked + .slider {
-            background-color: #27ae60;
+            background-color: #1e8449;
         }
         .switch input:checked + .slider:before {
             transform: translateX(24px);
@@ -408,7 +416,7 @@
             color: #e74c3c;
         }
         .modal-body {
-            color: #3498db; 
+            color: #2c3e50; 
             font-weight: 600;
             font-size: 0.9em;
         }
@@ -461,29 +469,151 @@
             padding: 50px 20px;
             font-size: 14px;
         }
+        /* ── Frontend-design skill: tasarım token'ları (spacing ölçeği + odak renkleri) ── */
+        :root {
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --focus-ring: #0b5cad;
+            --focus-ring-dark-bg: #7dd3fc;
+            --radius-sm: 8px;
+        }
+        /* ── Klavye odağı: tüm etkileşimli öğelerde görünür focus göstergesi ── */
+        :focus-visible {
+            outline: 3px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+        .sidebar :focus-visible {
+            outline-color: var(--focus-ring-dark-bg);
+        }
+        /* Programatik odak (bölüm geçişi): görsel çerçeve çizme */
+        .section:focus {
+            outline: none;
+        }
+        /* ── İçeriğe atla bağlantısı (yalnızca klavye odağında görünür) ── */
+        .skip-link {
+            position: absolute;
+            left: var(--space-md);
+            top: -60px;
+            background: #2c3e50;
+            color: #fff;
+            padding: 10px var(--space-md);
+            border-radius: var(--radius-sm);
+            z-index: 3000;
+            text-decoration: none;
+            font-weight: 600;
+            transition: top 0.2s ease;
+        }
+        .skip-link:focus {
+            top: var(--space-md);
+            color: #fff;
+        }
+        /* ── İlçe raporu filtre ızgarası (responsive için class'a taşındı) ── */
+        .district-filter-grid {
+            display: grid;
+            grid-template-columns: 40fr 15fr 10fr 10fr 25fr;
+            gap: 10px;
+            align-items: end;
+        }
+        /* Dinamik durum satırlarında kayma (layout shift) önleme */
+        #searchCount, #reportStatus, #districtReportStatus {
+            min-height: 1.5em;
+        }
+        @media (max-width: 900px) {
+            .district-filter-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            /* Sidebar üst barda toplanır, içerik tam genişlik alır */
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                padding: 12px 0 10px;
+            }
+            .sidebar .logo {
+                padding: 0 var(--space-md) 12px;
+                margin-bottom: 12px;
+            }
+            .sidebar .logo h2 {
+                font-size: 1.2em;
+            }
+            .sidebar .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: var(--space-xs);
+            }
+            .sidebar .nav-item {
+                flex: 0 0 auto;
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                padding: 10px 14px;
+            }
+            .sidebar .nav-item:hover,
+            .sidebar .nav-item.active {
+                border-bottom-color: #3498db;
+            }
+            .sidebar .twitter-card {
+                margin: var(--space-sm) 12px 0;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 12px;
+            }
+            .header {
+                padding: var(--space-md);
+            }
+            .header h1 {
+                font-size: 1.4em;
+            }
+            .upload-area {
+                padding: 20px;
+            }
+            /* Sabit 400px canvas küçük ekranda taşmasın */
+            .chart-section:first-child canvas {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 420px;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+                animation: none !important;
+            }
+            .upload-area:hover,
+            .stat-card:hover,
+            .btn:hover,
+            .upload-area.dragover {
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body>
+    <a class="skip-link" href="#mainContent">Ana içeriğe atla</a>
     <div class="sidebar">
         <div class="logo">
             <h2>📊 Kütük Analizi</h2>
         </div>
-        <div class="sidebar-menu">
-            <div class="nav-item active" data-target="analyzerSection">📈 Ana Sayfa</div>
-            <div class="nav-item" data-target="searchSection">🔎 Arama Yap</div>
-            <div class="nav-item" data-target="reportSection">📋 Okul Raporu</div>
-            <div class="nav-item" data-target="districtReportSection">📊 İlçe Raporu</div>
-            <div class="nav-item" data-target="labelSection">🏷️ Etiket Oluştur</div>
-            <div class="nav-item" data-target="receiptSection">📄 Tutanak Oluştur</div>
-            <div class="nav-item" data-target="backupSection">📁 Yedekleme</div>
-        </div>
+        <nav class="sidebar-menu" aria-label="Ana menü">
+            <button type="button" class="nav-item active" data-target="analyzerSection" aria-current="page">📈 Ana Sayfa</button>
+            <button type="button" class="nav-item" data-target="searchSection">🔎 Arama Yap</button>
+            <button type="button" class="nav-item" data-target="reportSection">📋 Okul Raporu</button>
+            <button type="button" class="nav-item" data-target="districtReportSection">📊 İlçe Raporu</button>
+            <button type="button" class="nav-item" data-target="labelSection">🏷️ Etiket Oluştur</button>
+            <button type="button" class="nav-item" data-target="receiptSection">📄 Tutanak Oluştur</button>
+            <button type="button" class="nav-item" data-target="backupSection">📁 Yedekleme</button>
+        </nav>
         <div class="twitter-card">
             <div style="color:#e6eef7;font-size:14px;font-weight:700;">Cem Türker</div>
             <small>Kocaeli ÖDM</small>
         </div>
     </div>
 
-    <div class="main-content">
+    <main class="main-content" id="mainContent" tabindex="-1">
         <div id="analyzerSection" class="section active">
             <div class="header">
                 <h1>Kütük Verileri Analizi</h1>
@@ -491,10 +621,10 @@
             </div>
 
             <div class="upload-section">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📁</div>
+                <div class="upload-area" id="uploadArea" role="button" tabindex="0" aria-label="Kütük dosyası yükleme alanı. Dosya seçmek için Enter veya Boşluk tuşuna basın ya da dosyayı buraya sürükleyin.">
+                    <div class="upload-icon" aria-hidden="true">📁</div>
                     <h3>Kütük Dosyasını Yükleyin</h3>
-                    <p style="margin: 10px 0; color: #7f8c8d;">Dosyayı buraya sürükleyin veya tıklayarak seçin</p>
+                    <p style="margin: 10px 0; color: #566573;">Dosyayı buraya sürükleyin veya tıklayarak seçin</p>
                     <button class="btn" onclick="document.getElementById('fileInput').click()">Dosya Seç</button>
                     <div class="filter-switch-row">
                         <span class="filter-switch-caption">Filtreleme</span>
@@ -504,7 +634,7 @@
                         </label>
                         <span id="filterToggleLabelText" class="switch-state">Kapalı</span>
                     </div>
-                    <input type="file" id="fileInput" accept=".xlsx,.xls" multiple>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls" multiple aria-label="Excel kütük dosyası seç">
                     <div class="file-info" id="fileInfo"></div>
                     <div id="filterToggleStatus" class="file-info" style="margin-top:8px;">Filtre kapalı: tüm kayıtlar dahil edilir.</div>
 
@@ -575,14 +705,14 @@
                         <div class="chart-header">
                             <h3>Öğrenci Türü Dağılımı</h3>
                         </div>
-                        <canvas id="chart"></canvas>
+                        <canvas id="chart" role="img" aria-label="Öğrenci türü dağılım grafiği"></canvas>
                     </div>
                     
                     <div class="chart-section">
                         <div class="chart-header">
                             <h3>İlçelere Göre Öğrenci Dağılımı</h3>
                         </div>
-                        <canvas id="districtChart"></canvas>
+                        <canvas id="districtChart" role="img" aria-label="İlçelere göre öğrenci dağılım grafiği"></canvas>
                     </div>
                 </div>
             </div>
@@ -595,9 +725,9 @@
             </div>
             <div class="card">
                 <div class="search-row">
-                    <select id="searchColumnSelect" class="input"></select>
-                    <input id="searchQueryInput" class="input" placeholder="Arama terimi (örn: okul, şube, ilçe)">
-                    <button id="searchBtn" class="btn" style="background:#27ae60;">Ara</button>
+                    <select id="searchColumnSelect" class="input" aria-label="Aranacak sütun"></select>
+                    <input id="searchQueryInput" class="input" placeholder="Arama terimi (örn: okul, şube, ilçe)" aria-label="Arama terimi">
+                    <button id="searchBtn" class="btn" style="background:#1e8449;">Ara</button>
                     <button id="searchExportBtn" class="btn">Excel'e Aktar</button>
                     <button id="searchCheckBtn" class="btn">Veriyi Kontrol Et</button>
                 </div>
@@ -616,17 +746,17 @@
                 <div class="card">
                     <h3 style="margin-top:0; margin-bottom:15px; font-size:1.1em; color:#2c3e50;">Filtreler</h3>
                     <div class="search-row" style="margin-bottom:12px; grid-template-columns: 1fr;">
-                        <select id="reportDistrictFilter" class="input"></select>
+                        <select id="reportDistrictFilter" class="input" aria-label="İlçe filtresi"></select>
                     </div>
                     <div class="search-row" style="margin-bottom:12px; grid-template-columns: 1fr;">
-                        <select id="reportSchoolFilter" class="input"></select>
+                        <select id="reportSchoolFilter" class="input" aria-label="Okul filtresi"></select>
                     </div>
                     <div class="search-row" style="margin-bottom:12px; grid-template-columns: 1fr;">
-                        <select id="branchStudentSelect" class="input"></select>
+                        <select id="branchStudentSelect" class="input" aria-label="Şube seçimi"></select>
                     </div>
                     <div class="report-actions" style="gap:10px;">
                         <button id="reportClearFilterBtn" class="btn">Filtreyi Temizle</button>
-                        <button id="printBranchStudentBtn" class="btn" style="background:#27ae60;">Sınıf Listesini Yazdır</button>
+                        <button id="printBranchStudentBtn" class="btn" style="background:#1e8449;">Sınıf Listesini Yazdır</button>
                     </div>
                 </div>
                 <div class="card">
@@ -665,9 +795,9 @@
             </div>
             <div class="card">
                 <h3 style="margin-top:0; margin-bottom:15px; font-size:1.1em; color:#2c3e50;">Filtreler</h3>
-                <div style="display:grid; grid-template-columns: 40fr 15fr 10fr 10fr 25fr; gap:10px; align-items:end;">
-                    <select id="districtFilterDropdown" class="input" style="width:100%; min-width:0;"></select>
-                    <button id="districtSummaryBtn" class="btn" style="background:#27ae60; width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">İl Özet</button>
+                <div class="district-filter-grid">
+                    <select id="districtFilterDropdown" class="input" aria-label="İlçe filtresi" style="width:100%; min-width:0;"></select>
+                    <button id="districtSummaryBtn" class="btn" style="background:#1e8449; width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">İl Özet</button>
                     <button id="districtReportRefreshBtn" class="btn" style="width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">Yenile</button>
                     <button id="districtReportPrintBtn" class="btn" style="width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">Yazdır</button>
                     <button id="districtReportExportBtn" class="btn" style="width:100%; min-width:0; padding:11px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;">Tüm Okulları Excel'e Aktar</button>
@@ -708,7 +838,7 @@
 
                     <!-- Etiket Türü -->
                     <div style="margin-bottom:14px;">
-                        <label class="label-settings-label">Etiket Türü</label>
+                        <label class="label-settings-label" for="labelTypeSelect">Etiket Türü</label>
                         <select id="labelTypeSelect" class="input">
                             <option value="school">🏫 Okul Etiketi — okula gidecek poşet</option>
                             <option value="branch">📦 Şube Etiketi — sınav poşetine</option>
@@ -717,25 +847,25 @@
 
                     <!-- Kapsam -->
                     <div style="margin-bottom:14px;">
-                        <label class="label-settings-label">Kapsam</label>
+                        <label class="label-settings-label" for="labelScopeSelect">Kapsam</label>
                         <select id="labelScopeSelect" class="input"></select>
                     </div>
 
                     <!-- İlçe seçimi -->
                     <div id="labelDistrictRow" style="margin-bottom:14px; display:none;">
-                        <label class="label-settings-label">İlçe</label>
+                        <label class="label-settings-label" for="labelDistrictSelect">İlçe</label>
                         <select id="labelDistrictSelect" class="input"></select>
                     </div>
 
                     <!-- Okul seçimi -->
                     <div id="labelSchoolRow" style="margin-bottom:14px; display:none;">
-                        <label class="label-settings-label">Okul</label>
+                        <label class="label-settings-label" for="labelSchoolSelect">Okul</label>
                         <select id="labelSchoolSelect" class="input"></select>
                     </div>
 
                     <!-- Şube seçimi -->
                     <div id="labelBranchRow" style="margin-bottom:14px; display:none;">
-                        <label class="label-settings-label">Şube</label>
+                        <label class="label-settings-label" for="labelBranchSelect">Şube</label>
                         <select id="labelBranchSelect" class="input"></select>
                     </div>
 
@@ -743,7 +873,7 @@
                     <label class="label-settings-label">Sayfa Düzeni (Sütun × Satır)</label>
                     <div style="display:flex; gap:10px; margin-bottom:16px;">
                         <div style="flex:1;">
-                            <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">Sütun Sayısı</label>
+                            <label for="labelColCount" style="font-size:12px; color:#595959; display:block; margin-bottom:4px;">Sütun Sayısı</label>
                             <select id="labelColCount" class="input">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -753,7 +883,7 @@
                             </select>
                         </div>
                         <div style="flex:1;">
-                            <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">Satır Sayısı</label>
+                            <label for="labelRowCount" style="font-size:12px; color:#595959; display:block; margin-bottom:4px;">Satır Sayısı</label>
                             <select id="labelRowCount" class="input">
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -778,7 +908,7 @@
                         <h3 style="margin-top:0; margin-bottom:0; font-size:1.1em; color:#2c3e50;">Önizleme</h3>
                         <div style="display:flex; gap:8px;">
                             <button id="labelPreviewBtn" class="btn">Önizle</button>
-                            <button id="labelPrintBtn" class="btn" style="background:#27ae60;">Yazdır / PDF</button>
+                            <button id="labelPrintBtn" class="btn" style="background:#1e8449;">Yazdır / PDF</button>
                         </div>
                     </div>
                     <div id="labelPreviewArea" class="label-preview-wrap">
@@ -801,7 +931,7 @@
                     <h3 style="margin-top:0; margin-bottom:15px; font-size:1.1em; color:#2c3e50;">Tutanak Ayarları</h3>
 
                     <div style="margin-bottom:14px;">
-                        <label class="label-settings-label">Tutanak Türü</label>
+                        <label class="label-settings-label" for="receiptTypeSelect">Tutanak Türü</label>
                         <select id="receiptTypeSelect" class="input">
                             <option value="center2district">🏛️ Merkez → İlçe Teslim Tutanağı</option>
                             <option value="district2school">🏫 İlçe → Okul Teslim Tutanağı</option>
@@ -809,28 +939,28 @@
                     </div>
 
                     <div id="receiptDistrictRow" style="margin-bottom:14px; display:none;">
-                        <label class="label-settings-label">İlçe Seç</label>
+                        <label class="label-settings-label" for="receiptDistrictSelect">İlçe Seç</label>
                         <select id="receiptDistrictSelect" class="input"></select>
                     </div>
 
                     <div style="margin-bottom:14px;">
-                        <label class="label-settings-label">Tutanak Başlığı</label>
+                        <label class="label-settings-label" for="receiptTitle">Tutanak Başlığı</label>
                         <input id="receiptTitle" class="input" type="text" placeholder="örn: Sınav Evrakı Teslim Tutanağı" value="Sınav Evrakı Teslim Tutanağı">
                     </div>
 
                     <div style="margin-bottom:14px;">
-                        <label class="label-settings-label">Tarih</label>
+                        <label class="label-settings-label" for="receiptDate">Tarih</label>
                         <input id="receiptDate" class="input" type="date">
                     </div>
 
                     <div style="margin-bottom:14px;">
-                        <label class="label-settings-label">Düzenleyen (Ad Soyad / Unvan)</label>
+                        <label class="label-settings-label" for="receiptPreparedBy">Düzenleyen (Ad Soyad / Unvan)</label>
                         <input id="receiptPreparedBy" class="input" type="text" placeholder="örn: İl MEM Sınav Birimi">
                     </div>
 
                     <div class="report-actions" style="flex-direction:column; gap:8px; align-items:stretch;">
                         <button id="receiptPreviewBtn" class="btn">Önizle</button>
-                        <button id="receiptPrintBtn" class="btn" style="background:#27ae60;">Yazdır / PDF</button>
+                        <button id="receiptPrintBtn" class="btn" style="background:#1e8449;">Yazdır / PDF</button>
                     </div>
                 </div>
 
@@ -844,17 +974,17 @@
             </div>
         </div>
 
-    </div>
+    </main>
 
     <!-- District Summary Modal -->
-    <div id="districtSummaryModal" class="modal">
+    <div id="districtSummaryModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="districtSummaryTitle">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>İlçe Özet Raporu</h2>
+                <h2 id="districtSummaryTitle">İlçe Özet Raporu</h2>
                 <div style="display:flex; gap:10px;">
                     <button id="modalDistrictSummaryPrintBtn" class="btn" style="padding:4px 12px; font-size:0.9em;">Yazdır</button>
                     <button id="modalDistrictSummaryExportBtn" class="btn" style="padding:4px 12px; font-size:0.9em;">Excel'e Aktar</button>
-                    <button class="modal-close">&times;</button>
+                    <button class="modal-close" aria-label="Pencereyi kapat">&times;</button>
                 </div>
             </div>
             <div class="modal-body">
@@ -1032,8 +1162,13 @@
             hideProgress();
         }
 
+        // Bölümler programatik odak için odaklanabilir yapılır (bölüm geçişinde ekran okuyucu anonsu)
+        Object.values(sections).forEach((el) => {
+            if (el && !el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+        });
+
         navItems.forEach(item => {
-            item.addEventListener('click', () => showSection(item.dataset.target));
+            item.addEventListener('click', () => showSection(item.dataset.target, true));
         });
 
         if (filterToggleInput) {
@@ -1045,7 +1180,7 @@
         }
         updateFilterToggleUI();
 
-        function showSection(targetId) {
+        function showSection(targetId, moveFocus = false) {
             Object.entries(sections).forEach(([id, el]) => {
                 if (!el) return;
                 if (id === targetId) {
@@ -1056,7 +1191,13 @@
                     el.classList.add('hidden');
                 }
             });
-            navItems.forEach(item => item.classList.toggle('active', item.dataset.target === targetId));
+            navItems.forEach(item => {
+                const isActive = item.dataset.target === targetId;
+                item.classList.toggle('active', isActive);
+                if (isActive) item.setAttribute('aria-current', 'page');
+                else item.removeAttribute('aria-current');
+            });
+            if (moveFocus && sections[targetId]) sections[targetId].focus({ preventScroll: true });
             if (targetId === 'searchSection' && !searchInitialized) {
                 initSearchSection();
             }
@@ -1101,6 +1242,15 @@
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 handleFiles(files);
+            }
+        });
+
+        // Klavye ile dosya seçimi: Enter / Boşluk (iç butondan gelmeyen tuşlar)
+        uploadArea.addEventListener('keydown', (e) => {
+            if (e.target !== uploadArea) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
             }
         });
 
@@ -1666,7 +1816,7 @@
             searchCount.textContent = `${total} sonuç bulundu • Sayfa ${searchPage}/${totalPages}`;
 
             const thead = ['#'].concat(searchDisplayCols.map(c => c.label || '-'));
-            let html = '<table class="table"><thead><tr>' + thead.map(h=>`<th>${escapeHtml(h)}</th>`).join('') + '</tr></thead><tbody>';
+            let html = '<table class="table"><thead><tr>' + thead.map(h=>`<th scope="col">${escapeHtml(h)}</th>`).join('') + '</tr></thead><tbody>';
             slice.forEach((row, i) => {
                 const cells = searchDisplayCols.map(c => row[c.index]);
                 html += '<tr>' + [''+(start + i + 1)].concat(cells.map(c => c!==undefined && c!==null ? c : '-')).map(c=>`<td>${escapeHtml(c)}</td>`).join('') + '</tr>';
@@ -2041,7 +2191,7 @@
             const end = start + reportPageSize;
             const slice = data.slice(start, end);
 
-            let html = '<table class="table"><thead><tr><th>#</th><th>İlçe</th><th>Kurum Kodu</th><th>Okul Adı</th><th>Öğrenci Sayısı</th><th>Şube Sayısı </th><th>Ö. Eğt. Öğr. Sayısı</th></tr></thead><tbody>';
+            let html = '<table class="table"><thead><tr><th scope="col">#</th><th scope="col">İlçe</th><th scope="col">Kurum Kodu</th><th scope="col">Okul Adı</th><th scope="col">Öğrenci Sayısı</th><th scope="col">Şube Sayısı </th><th scope="col">Ö. Eğt. Öğr. Sayısı</th></tr></thead><tbody>';
             slice.forEach((s,i)=> {
                 html += `<tr data-idx="${start + i}"><td>${start + i + 1}</td><td>${escapeHtml(s.district || '-')}</td><td>${escapeHtml(s.schoolCode)}</td><td>${escapeHtml(s.schoolName)}</td><td>${escapeHtml(s.studentCount)}</td><td>${escapeHtml(s.branchCount)}</td><td>${escapeHtml(s.specialCount)}</td></tr>`;
             });
@@ -2110,7 +2260,7 @@
             const rows = [];
             summary.branches.forEach((b, name)=> rows.push({ name, count: b.count }));
             rows.sort((a,b)=> b.count - a.count);
-            let html = '<table class="table"><thead><tr><th>#</th><th>Şube Adı</th><th>Öğrenci Sayısı</th></tr></thead><tbody>';
+            let html = '<table class="table"><thead><tr><th scope="col">#</th><th scope="col">Şube Adı</th><th scope="col">Öğrenci Sayısı</th></tr></thead><tbody>';
             rows.forEach((r,i)=> { html += `<tr><td>${i+1}</td><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.count)}</td></tr>`; });
             html += '</tbody></table>';
             branchTableWrap.innerHTML = html;
@@ -2153,7 +2303,7 @@
             if (!summary || !branchName) return '<div class="no-data">Şube seçerek öğrenci listesini görebilirsiniz.</div>';
             const students = getBranchStudentsSorted(summary, branchName);
             if (!students.length) return '<div class="no-data">Seçilen şube için öğrenci bulunamadı.</div>';
-            let html = `<div class="a4-sheet"><h2 style="text-align:center;margin:0 0 10px;font-size:16px;font-weight:bold;">SINIF YOKLAMA LİSTESİ</h2><h3>${escapeHtml(summary.schoolName)} - ${escapeHtml(branchName)}</h3><div class="meta"><span>İlçe: ${escapeHtml(summary.district || '-')}</span><span style="margin:0 10px;">Kurum Kodu: ${escapeHtml(summary.schoolCode)}</span><span>Öğrenci Sayısı: ${escapeHtml(students.length)}</span></div><table class="table"><thead><tr><th style="width:30px;">#</th><th style="width:70px;">Okul No</th><th style="width:375px;">Öğrenci Adı</th><th style="width:50px;">Kitapçık Türü</th><th style="width:75px;">İmza</th></tr></thead><tbody>`;
+            let html = `<div class="a4-sheet"><h2 style="text-align:center;margin:0 0 10px;font-size:16px;font-weight:bold;">SINIF YOKLAMA LİSTESİ</h2><h3>${escapeHtml(summary.schoolName)} - ${escapeHtml(branchName)}</h3><div class="meta"><span>İlçe: ${escapeHtml(summary.district || '-')}</span><span style="margin:0 10px;">Kurum Kodu: ${escapeHtml(summary.schoolCode)}</span><span>Öğrenci Sayısı: ${escapeHtml(students.length)}</span></div><table class="table"><thead><tr><th scope="col" style="width:30px;">#</th><th scope="col" style="width:70px;">Okul No</th><th scope="col" style="width:375px;">Öğrenci Adı</th><th scope="col" style="width:50px;">Kitapçık Türü</th><th scope="col" style="width:75px;">İmza</th></tr></thead><tbody>`;
             students.forEach((s,i)=> {
                 html += `<tr><td>${i+1}</td><td>${escapeHtml(s.number || '-')}</td><td>${escapeHtml(s.name || '-')}</td><td></td><td></td></tr>`;
             });
@@ -2311,7 +2461,7 @@
             const end = start + reportPageSize;
             const slice = data.slice(start, end);
 
-            let html = '<table class="table"><thead><tr><th>#</th><th>İlçe</th><th>Kurum Kodu</th><th>Okul Adı</th><th>Öğrenci Sayısı</th><th>Şube Sayısı</th><th>Ö. Eğt. Öğr. Sayısı</th></tr></thead><tbody>';
+            let html = '<table class="table"><thead><tr><th scope="col">#</th><th scope="col">İlçe</th><th scope="col">Kurum Kodu</th><th scope="col">Okul Adı</th><th scope="col">Öğrenci Sayısı</th><th scope="col">Şube Sayısı</th><th scope="col">Ö. Eğt. Öğr. Sayısı</th></tr></thead><tbody>';
             slice.forEach((s,i)=> {
                 html += `<tr><td>${start + i + 1}</td><td>${escapeHtml(s.district || '-')}</td><td>${escapeHtml(s.schoolCode)}</td><td>${escapeHtml(s.schoolName)}</td><td>${escapeHtml(s.studentCount)}</td><td>${escapeHtml(s.branchCount)}</td><td>${escapeHtml(s.specialCount)}</td></tr>`;
             });
@@ -2364,17 +2514,20 @@
                 return;
             }
 
-            let html = '<table class="table"><thead><tr><th>#</th><th>İlçe</th><th>Okul Sayısı</th><th>Şube Sayısı</th><th>Öğrenci Sayısı</th><th>Özel Eğitim Öğrenci</th></tr></thead><tbody>';
+            let html = '<table class="table"><thead><tr><th scope="col">#</th><th scope="col">İlçe</th><th scope="col">Okul Sayısı</th><th scope="col">Şube Sayısı</th><th scope="col">Öğrenci Sayısı</th><th scope="col">Özel Eğitim Öğrenci</th></tr></thead><tbody>';
             summaryData.forEach((s, i) => {
                 html += `<tr><td>${i + 1}</td><td>${escapeHtml(s.district)}</td><td>${escapeHtml(s.schoolCount)}</td><td>${escapeHtml(s.branchCount)}</td><td>${escapeHtml(s.studentCount)}</td><td>${escapeHtml(s.specialCount)}</td></tr>`;
             });
             html += '</tbody></table>';
             modalDistrictSummaryTableWrap.innerHTML = html;
             districtSummaryModal.classList.add('show');
+            const modalCloseBtn = districtSummaryModal.querySelector('.modal-close');
+            if (modalCloseBtn) modalCloseBtn.focus();
         }
 
         function closeDistrictSummaryModal() {
             districtSummaryModal.classList.remove('show');
+            if (districtSummaryBtn) districtSummaryBtn.focus();
         }
 
         function printDistrictSummary() {
@@ -2399,12 +2552,12 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>İlçe</th>
-                                <th>Okul Sayısı</th>
-                                <th>Şube Sayısı</th>
-                                <th>Öğrenci Sayısı</th>
-                                <th>Özel Eğitim Öğrenci</th>
+                                <th scope="col">#</th>
+                                <th scope="col">İlçe</th>
+                                <th scope="col">Okul Sayısı</th>
+                                <th scope="col">Şube Sayısı</th>
+                                <th scope="col">Öğrenci Sayısı</th>
+                                <th scope="col">Özel Eğitim Öğrenci</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2497,13 +2650,13 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>İlçe</th>
-                                <th>Kurum Kodu</th>
-                                <th>Okul Adı</th>
-                                <th>Öğrenci Sayısı</th>
-                                <th>Şube Sayısı</th>
-                                <th>Ö. Eğt. Öğr. Sayısı</th>
+                                <th scope="col">#</th>
+                                <th scope="col">İlçe</th>
+                                <th scope="col">Kurum Kodu</th>
+                                <th scope="col">Okul Adı</th>
+                                <th scope="col">Öğrenci Sayısı</th>
+                                <th scope="col">Şube Sayısı</th>
+                                <th scope="col">Ö. Eğt. Öğr. Sayısı</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2576,6 +2729,10 @@
         if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeDistrictSummaryModal);
         districtSummaryModal.addEventListener('click', (e) => {
             if (e.target === districtSummaryModal) closeDistrictSummaryModal();
+        });
+        // Escape ile modal kapatma
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && districtSummaryModal.classList.contains('show')) closeDistrictSummaryModal();
         });
 
         // goToClassList removed (navigation to class-list.html disabled).
