@@ -283,6 +283,39 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
+        @property --beam-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        .btn-beam {
+            position: relative;
+            isolation: isolate;
+            overflow: visible;
+        }
+        .btn-beam::before {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: 11px;
+            padding: 5px;
+            background: conic-gradient(from var(--beam-angle, 0deg),
+                transparent 0deg, transparent 270deg,
+                #ffd900 305deg, #ffd900 325deg, transparent 340deg);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: beam-spin 2.2s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        @keyframes beam-spin {
+            to { --beam-angle: 360deg; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .btn-beam::before { animation: none; }
+        }
         .file-info { 
             margin-top: 20px; 
             color: #566573;
@@ -625,7 +658,7 @@
                     <div class="upload-icon" aria-hidden="true">📁</div>
                     <h3>Kütük Dosyasını Yükleyin</h3>
                     <p style="margin: 10px 0; color: #566573;">Dosyayı buraya sürükleyin veya tıklayarak seçin</p>
-                    <button class="btn" onclick="document.getElementById('fileInput').click()">Dosya Seç</button>
+                    <button class="btn btn-beam" onclick="document.getElementById('fileInput').click()">Dosya Seç</button>
                     <div class="filter-switch-row">
                         <span class="filter-switch-caption">Filtreleme</span>
                         <label class="switch" for="filterToggleInput">
