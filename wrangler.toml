@@ -1,0 +1,7 @@
+name = "sp-kutuk-islemleri"
+compatibility_date = "2026-09-07"
+
+# Static Assets: sadece public/ klasörü yayınlanır (index.html + favicon.png)
+# Güncelleme: npx wrangler login  →  npx wrangler deploy
+[assets]
+directory = "./public"
